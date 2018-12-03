@@ -1,29 +1,24 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {HashRouter, Route, Switch} from 'react-router-dom';
+import ReactDom from 'react-dom';
+import {HashRouter,Route,Switch} from 'react-router-dom'
 import {Provider} from 'react-redux';
 
-import Login from './containers/login';
-import Register from './containers/register';
-import Main from './containers/main';
-import store from './redux/store';
+import store from '../src/redux/store'
+import Main from '../src/components/main';
+import Login from '../src/components/login';
+import Register from '../src/components/register';
 
-// import './test/socketio_test';
 
-//引入公共的样式
-import './assets/less/index.less';
 
-ReactDOM.render(
-  (
+ReactDom.render(
     <Provider store={store}>
-      <HashRouter>
-        <Switch>
-          <Route path="/login" component={Login}/>
-          <Route path="/register" component={Register}/>
-          <Route component={Main}/>
-        </Switch>
-      </HashRouter>
+        <HashRouter>
+            <Switch>
+                <Route path={'/login'} component={Login}/>
+                <Route path={'/register'} component={Register}/>
+                <Route path={'/'} component={Main}/>
+            </Switch>
+        </HashRouter>
     </Provider>
-  )
-  , document.getElementById('root'));
 
+    ,document.getElementById('root'));
