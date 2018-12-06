@@ -5,8 +5,9 @@ import {Provider} from 'react-redux';
 
 import store from '../src/redux/store'
 import Main from '../src/components/main';
-import Login from '../src/components/login';
-import Register from '../src/components/register';
+import Login from '../src/containers/login';
+import Register from './containers/register';
+import  './assets/index.less';
 
 
 
