@@ -1,10 +1,19 @@
 
-import {reqRegister,reqLogin,reqUpdate} from '../api'
-import {AUTH_SUCCESS, AUTH_ERROR} from './action-types';
+import {reqRegister,reqLogin,reqUpdate,reqUserInfo,reqUserList} from '../api'
+import {AUTH_SUCCESS,
+    AUTH_ERROR,
+    UPDATE_USER_INFO,
+    RESET_USER_INFO,
+    RESET_USER_LIST,
+    UPDATE_USER_LIST} from './action-types';
 
 //定义同步任务
 export const authSuccess = data => ({type : AUTH_SUCCESS,data})
 export const authError = data => ({type : AUTH_ERROR,data})
+export const updateUserInfo = data => ({type : UPDATE_USER_INFO,data});
+export const resetUserInfo = data => ({type : RESET_USER_INFO,data});
+export const updateUserList = data => ({type : UPDATE_USER_LIST,data});
+export const resetUserList = data => ({type : RESET_USER_LIST,data});
 //定义异步任务
 //注册
 export const register = ({username,pwd,repwd,type}) => {
@@ -79,3 +88,42 @@ export const update = ({header, post, company, salary, info,type}) => {
             })
     }
 }
+
+//获取user信息
+export const getUserInfo = () => {
+    return dispatch => {
+        reqUserInfo()
+            .then(({data}) => {
+               if(data.code === 0) {
+                   dispatch(updateUserInfo(data.data))
+               }else {
+                   dispatch(resetUserInfo({errMsg : data.msg}))
+               }
+        })
+
+            .catch(err => {
+                dispatch(resetUserInfo({errMsg : '网络原因，请刷新试试'}))
+            })
+    }
+}
+
+//获取大神信息列表
+export const getUserList = (type) => {
+    return dispatch => {
+        reqUserList(type)
+            .then(({data}) => {
+                if(data.code === 0) {
+                    dispatch(updateUserList(data.data))
+                }else {
+                    dispatch(resetUserList())
+                }
+            })
+
+            .catch(err => {
+                dispatch(resetUserList())
+            })
+    }
+}
+
+
+

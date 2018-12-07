@@ -13,7 +13,7 @@ class Message extends Component{
                         arrow="horizontal"
                         thumb={require('../../assets/images/头像1.png')}
                         multipleLine>
-                        赶紧来面试<Brief>BOSS1</Brief>
+                        简历已发送到您的邮箱<Brief>大神</Brief>
                     </Item>
                 </List>
             </div>
