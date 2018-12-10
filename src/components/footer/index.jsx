@@ -7,16 +7,18 @@ import {withRouter}from 'react-router-dom'
 
 class Footer extends Component{
     static propTypes = {
-        navList : PropTypes.array.isRequired
+        navList : PropTypes.array.isRequired,
+        user : PropTypes.object.isRequired
     }
     redirectTo = path => {
         this.props.history.push(path)
     }
     render () {
         const Item = TabBar.Item;
+        //获取type
+        const type = this.props.user.type;
         //过滤navList
-        const type = '/boss';
-        const filter = type === '/boss' ? '/dashen' : '/boss';
+        const filter = type === 'boss' ? '/dashen' : '/boss';
         const newNavList = this.props.navList.filter(item => item.path === filter ? false : true);
         return(
             <div>

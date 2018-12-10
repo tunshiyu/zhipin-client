@@ -8,6 +8,8 @@ import Main from '../src/containers/main';
 import Login from '../src/containers/login';
 import Register from './containers/register';
 import  './assets/index.less';
+//引入sockerIO
+import '../src/test/socketio-test'
 
 
 

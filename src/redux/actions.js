@@ -1,11 +1,15 @@
 
-import {reqRegister,reqLogin,reqUpdate,reqUserInfo,reqUserList} from '../api'
+import io from 'socket.io-client';
+import {reqRegister,reqLogin,reqUpdate,reqUserInfo,reqUserList,reqChatList} from '../api'
 import {AUTH_SUCCESS,
     AUTH_ERROR,
     UPDATE_USER_INFO,
     RESET_USER_INFO,
     RESET_USER_LIST,
-    UPDATE_USER_LIST} from './action-types';
+    UPDATE_USER_LIST,
+    GET_CHAT_MESSAGES,
+    RESET_CHAT_MESSAGES,
+    UPDATA_CHAT_MESSAGES} from './action-types';
 
 //定义同步任务
 export const authSuccess = data => ({type : AUTH_SUCCESS,data})
@@ -14,6 +18,9 @@ export const updateUserInfo = data => ({type : UPDATE_USER_INFO,data});
 export const resetUserInfo = data => ({type : RESET_USER_INFO,data});
 export const updateUserList = data => ({type : UPDATE_USER_LIST,data});
 export const resetUserList = data => ({type : RESET_USER_LIST,data});
+export const getChatMessages = data => ({type : GET_CHAT_MESSAGES,data});
+export const resetChatMessages = () => ({type : RESET_CHAT_MESSAGES});
+export const updateChatMessages = data => ({type : UPDATA_CHAT_MESSAGES,data});
 //定义异步任务
 //注册
 export const register = ({username,pwd,repwd,type}) => {
@@ -121,6 +128,42 @@ export const getUserList = (type) => {
 
             .catch(err => {
                 dispatch(resetUserList())
+            })
+    }
+}
+
+//保证和服务器的链接只连接一次
+const socket = io('ws://localhost:5000');
+
+export const sendMessage = ({message, from, to}) => {
+    return dispatch => {
+        //向服务器发送了一条消息
+        socket.emit('sendMsg', {message, from, to})
+        console.log('浏览器端向服务器发送消息:', {message, from, to})
+        if(!socket.isFirst){
+            socket.isFirst = true;
+            //保证只绑定一次
+            socket.on('receiveMsg', function (data) {
+                console.log('浏览器端接收到服务器发送的消息:', data)
+            //    实时更新
+                dispatch(updateChatMessages(data))
+            })
+        }
+    }
+};
+
+
+//页面发送信息
+export const getChatList = () => {
+    return dispatch => {
+        reqChatList()
+            .then(({data}) => {
+                if (data.code === 0){
+                    return dispatch(getChatMessages(data.data))
+                }
+        })
+            .catch(err => {
+                dispatch(resetChatMessages())
             })
     }
 }

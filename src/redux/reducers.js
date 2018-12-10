@@ -7,7 +7,10 @@ import {AUTH_SUCCESS,
     UPDATE_USER_INFO,
     RESET_USER_INFO,
     UPDATE_USER_LIST,
-    RESET_USER_LIST} from './action-types';
+    RESET_USER_LIST,
+    GET_CHAT_MESSAGES,
+    RESET_CHAT_MESSAGES,
+    UPDATA_CHAT_MESSAGES} from './action-types';
 
 //初始化状态的值
 const initUserState = {
@@ -65,9 +68,32 @@ function getRedirectToPath(type,header) {
     return path;
 }
 
+//对话信息  内容格式看API定义，因为是服务器返回来的数据
+const initChatMessagesState = {
+    users : {},
+    chatMsgs: []
+}
+
+function chatList(previousChatMessagesState=initChatMessagesState,action) {
+    switch (action.type) {
+        case GET_CHAT_MESSAGES:
+            return action.data
+        case RESET_CHAT_MESSAGES:
+            return previousChatMessagesState
+        case UPDATA_CHAT_MESSAGES :
+            return {
+                users : previousChatMessagesState.users,
+                chatMsgs : [...previousChatMessagesState.chatMsgs,action.data]
+            }
+        default :
+            return initChatMessagesState
+    }
+}
+
 //默认暴露合并后的reducers函数
 // {xxx: function xxx() {}, yyy: function yyy() {}}
 export default combineReducers({
     user,
-    userList
+    userList,
+    chatList
 })
